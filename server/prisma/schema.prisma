@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+  DEMO
+}
+
+model Customer {
+  id                     Int    @id @default(autoincrement())
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @default(now()) @updatedAt
+
+  email                  String    @unique
+  name                   String
+  role                   Role      @default(USER)
+  password               String
+
+  sales Sale[]
+}
+
+model Product {
+  id                     Int    @id @default(autoincrement())
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @default(now()) @updatedAt
+  name String
+
+  sales Sale[]
+}
+
+model Sale {
+  id                     Int    @id @default(autoincrement())
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @default(now()) @updatedAt
+
+  customerId Int
+  productId Int
+
+  customer Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade) 
+  product Product    @relation(fields: [productId], references: [id], onDelete: Cascade) 
+
+  @@unique([customerId, productId])
+}
