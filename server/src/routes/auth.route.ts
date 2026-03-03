@@ -4,5 +4,5 @@ import type { FastifyInstance } from "fastify";
 export default async function authRoutes(fastify: FastifyInstance) {
   fastify.post("/login", authController.loginHandler);
   fastify.post("/register", authController.registerHandler);
-  fastify.get("/logout", authController.logoutHandler);
+  fastify.delete("/logout", authController.logoutHandler);
 }
