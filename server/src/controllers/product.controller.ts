@@ -16,6 +16,20 @@ class ProductController {
     return product;
   }
 
+  async getAllProductHandler(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const products = await prisma.product.findMany();
+
+      if (!products) {
+        return reply.status(404).send({ message: "Product not found" });
+      }
+
+      return reply.status(200).send({ products });
+    } catch (error: any) {
+      return reply.status(500).send({ message: "Internal Server Error" });
+    }
+  }
+
   async getProductHandler(request: FastifyRequest, reply: FastifyReply) {
     try {
       const result = await getProductSchema.safeParseAsync({
