@@ -1,12 +1,14 @@
 import Fastify from "fastify";
 import authRoutes from "./routes/auth.route";
+import productRoutes from "./routes/product.route";
 
 const fastify = Fastify({
   logger: false,
 });
 
 // Register routes
-fastify.register(authRoutes, { prefix: "/api/v1" });
+fastify.register(authRoutes, { prefix: "/api/v1/auth" });
+fastify.register(productRoutes, { prefix: "/api/v1/product" });
 
 fastify.get("/", function (request, reply) {
   reply.send({ hello: "world" });
