@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const ProductCategory = ["FOOD", "ELECTRONIC", "HOME_APPLIANCE"] as const;
+
 export const productIdParamSchema = z.object({
   id: z.string().min(1, "ID is required in URL"),
 });
@@ -8,6 +10,7 @@ export const registerProductSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   price: z.number(),
   quantity: z.number(),
+  category: z.enum(ProductCategory),
 });
 
 export const updateProductSchema = z.object({

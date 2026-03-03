@@ -66,16 +66,18 @@ class ProductController {
           nameErr: flattenedErrors.fieldErrors.name?.[0],
           priceErr: flattenedErrors.fieldErrors.price?.[0],
           quantityErr: flattenedErrors.fieldErrors.quantity?.[0],
+          categoryErr: flattenedErrors.fieldErrors.category?.[0],
         });
       }
 
-      const { name, price, quantity } = result.data;
+      const { name, price, quantity, category } = result.data;
 
       const newProduct = await prisma.product.create({
         data: {
           name,
           price: price,
           quantity: quantity,
+          category: category,
         },
       });
 
