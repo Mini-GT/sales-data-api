@@ -7,79 +7,87 @@ import z from "zod";
 
 class AuthController {
   async loginHandler(request: FastifyRequest, reply: FastifyReply) {
-    const result = await loginSchema.safeParseAsync(request.body);
+    try {
+      const result = await loginSchema.safeParseAsync(request.body);
 
-    if (!result.success) {
-      const flattenedErrors = z.flattenError(result.error);
-      return reply.status(400).send({
-        emailErr: flattenedErrors.fieldErrors.email?.[0],
-        passwordErr: flattenedErrors.fieldErrors.password?.[0],
+      if (!result.success) {
+        const flattenedErrors = z.flattenError(result.error);
+        return reply.status(400).send({
+          emailErr: flattenedErrors.fieldErrors.email?.[0],
+          passwordErr: flattenedErrors.fieldErrors.password?.[0],
+        });
+      }
+
+      const { email, password } = result.data;
+
+      const user = await prisma.customer.findUnique({
+        where: {
+          email,
+        },
       });
+
+      if (!user) {
+        return reply.status(401).send({ message: "Invalid email or password" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        return reply.status(401).send({ message: "Invalid email or password" });
+      }
+
+      const token = signJwt({ id: user.id }, TOKEN_JWT_SECRET, { expiresIn: "7d" });
+
+      reply.header("accessToken", token).status(200).send({ message: "Login successful" });
+    } catch (error) {
+      return reply.status(500).send({ message: "Internal Server Error" });
     }
-
-    const { email, password } = result.data;
-
-    const user = await prisma.customer.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (!user) {
-      return reply.status(401).send({ message: "Invalid email or password" });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      return reply.status(401).send({ message: "Invalid email or password" });
-    }
-
-    const token = signJwt({ id: user.id }, TOKEN_JWT_SECRET, { expiresIn: "7d" });
-
-    reply.header("accessToken", token).status(200).send({ message: "Login successful" });
   }
 
   async registerHandler(request: FastifyRequest, reply: FastifyReply) {
-    const result = await registerSchema.safeParseAsync(request.body);
+    try {
+      const result = await registerSchema.safeParseAsync(request.body);
 
-    if (!result.success) {
-      const flattenedErrors = z.flattenError(result.error);
-      return reply.status(400).send({
-        nameErr: flattenedErrors.fieldErrors.name?.[0],
-        emailErr: flattenedErrors.fieldErrors.email?.[0],
-        passwordErr: flattenedErrors.fieldErrors.password?.[0],
+      if (!result.success) {
+        const flattenedErrors = z.flattenError(result.error);
+        return reply.status(400).send({
+          nameErr: flattenedErrors.fieldErrors.name?.[0],
+          emailErr: flattenedErrors.fieldErrors.email?.[0],
+          passwordErr: flattenedErrors.fieldErrors.password?.[0],
+        });
+      }
+
+      const { name, email, password } = result.data;
+
+      const existingUser = await prisma.customer.findUnique({
+        where: {
+          email,
+        },
       });
+
+      if (existingUser) {
+        return reply.status(400).send({ message: "User already exists" });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 8);
+
+      const user = await prisma.customer.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          role: "USER",
+        },
+      });
+
+      if (!user) {
+        reply.status(500).send({ message: "Cannot create an account" });
+      }
+
+      reply.status(201).send({ message: "User created" });
+    } catch (error) {
+      return reply.status(500).send({ message: "Internal Server Error" });
     }
-
-    const { name, email, password } = result.data;
-
-    const existingUser = await prisma.customer.findUnique({
-      where: {
-        email,
-      },
-    });
-
-    if (existingUser) {
-      return reply.status(400).send({ message: "User already exists" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 8);
-
-    const user = await prisma.customer.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: "USER",
-      },
-    });
-
-    if (!user) {
-      reply.status(500).send({ message: "Cannot create an account" });
-    }
-
-    reply.status(201).send({ message: "User created" });
   }
 
   async logoutHandler(request: FastifyRequest, reply: FastifyReply) {
