@@ -44,8 +44,8 @@ model Sale {
   customerId Int
   productId  Int
 
+  quantity Int @default(1)
+
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
   product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@unique([customerId, productId])
 }
