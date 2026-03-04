@@ -80,7 +80,9 @@ server/
 The database consists of three core tables:
 
 **Customer** — stores customer information
+
 **Product** — stores product catalog
+
 **Sale** — links customers to products with a purchase date
 
 **NOTE** — The schema below is just for demo purposes therefore the unique identifier used has a default of autoincrement(), but in a real world enterprise application this should be more secure such as cuid(), uuid(), or whatever strong and secure unique identifier you want to use
