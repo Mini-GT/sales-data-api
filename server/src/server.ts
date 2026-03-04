@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import authRoutes from "./routes/auth.route";
 import productRoutes from "./routes/product.route";
+import saleRoutes from "./routes/sale.route";
 
 const fastify = Fastify({
   logger: false,
@@ -9,6 +10,7 @@ const fastify = Fastify({
 // Register routes
 fastify.register(authRoutes, { prefix: "/api/v1/auth" });
 fastify.register(productRoutes, { prefix: "/api/v1/product" });
+fastify.register(saleRoutes, { prefix: "/api/v1/sale" });
 
 fastify.get("/", function (request, reply) {
   reply.send({ hello: "world" });
