@@ -21,7 +21,7 @@ class SaleController {
 
   /**
    * GET /sale?year=2025&month=3
-   * Optional params [customerId, productId]
+   * Optional params `customerId, productId`
    * Returns all sales for a given month
    * Can search sales base on a specific customer or product
    */
@@ -95,8 +95,8 @@ class SaleController {
   }
 
   /**
-   * GET /sale/:id
-   * Returns a sale base on the Id
+   * GET /sale/:saleId
+   * Returns a sale/s base on the sale Id
    */
   async getSaleHandler(request: FastifyRequest, reply: FastifyReply) {
     try {

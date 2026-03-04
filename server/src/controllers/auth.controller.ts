@@ -6,6 +6,10 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 
 class AuthController {
+  /**
+   * POST /auth/login
+   * Validates input and sets cookie with an access token
+   */
   async loginHandler(request: FastifyRequest, reply: FastifyReply) {
     try {
       const result = await loginSchema.safeParseAsync(request.body);
@@ -44,6 +48,10 @@ class AuthController {
     }
   }
 
+  /**
+   * POST /auth/register
+   * Validates and register a single user/customer
+   */
   async registerHandler(request: FastifyRequest, reply: FastifyReply) {
     try {
       const result = await registerSchema.safeParseAsync(request.body);
@@ -90,6 +98,10 @@ class AuthController {
     }
   }
 
+  /**
+   * DELETE /auth/logout
+   * Removes the access token
+   */
   async logoutHandler(request: FastifyRequest, reply: FastifyReply) {
     reply.removeHeader("accessToken").send({ message: "Logged out" });
   }

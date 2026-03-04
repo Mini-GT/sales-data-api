@@ -16,6 +16,10 @@ class ProductController {
     return product;
   }
 
+  /**
+   * GET /product
+   * Returns all product (will add a limit in the future)
+   */
   async getAllProductHandler(request: FastifyRequest, reply: FastifyReply) {
     try {
       const products = await prisma.product.findMany();
@@ -30,6 +34,10 @@ class ProductController {
     }
   }
 
+  /**
+   * GET /product/:productId
+   * Validates and returns a single product
+   */
   async getProductHandler(request: FastifyRequest, reply: FastifyReply) {
     try {
       const result = await getProductSchema.safeParseAsync({
@@ -56,6 +64,10 @@ class ProductController {
     }
   }
 
+  /**
+   * POST /product/:productId
+   * Registers a product base on the requested body
+   */
   async registerHandler(request: FastifyRequest, reply: FastifyReply) {
     try {
       const result = await registerProductSchema.safeParseAsync(request.body);
@@ -87,6 +99,10 @@ class ProductController {
     }
   }
 
+  /**
+   * PATCH /product/:productId
+   * Validates and update the product base on the requested body (all body fields are optional)
+   */
   async updateHandler(request: FastifyRequest, reply: FastifyReply) {
     try {
       const result = await updateProductSchema.safeParseAsync({
@@ -121,8 +137,11 @@ class ProductController {
     }
   }
 
+  /**
+   * DELETE /product/:productId
+   * Deletes the product
+   */
   async deleteHandler(request: FastifyRequest, reply: FastifyReply) {
-    console.log(request.body);
     try {
       const result = await deleteProductSchema.safeParseAsync({ params: request.params });
       if (!result.success) {
