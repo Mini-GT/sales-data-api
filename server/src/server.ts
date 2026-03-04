@@ -2,10 +2,13 @@ import Fastify from "fastify";
 import authRoutes from "./routes/auth.route";
 import productRoutes from "./routes/product.route";
 import saleRoutes from "./routes/sale.route";
+import fastifyCookie from "@fastify/cookie";
 
 const fastify = Fastify({
   logger: false,
 });
+
+fastify.register(fastifyCookie);
 
 // Register routes
 fastify.register(authRoutes, { prefix: "/api/v1/auth" });
