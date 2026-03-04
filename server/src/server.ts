@@ -3,11 +3,17 @@ import authRoutes from "./routes/auth.route";
 import productRoutes from "./routes/product.route";
 import saleRoutes from "./routes/sale.route";
 import fastifyCookie from "@fastify/cookie";
+import cors from "@fastify/cors";
+import fastifyHelmet from "@fastify/helmet";
 
 const fastify = Fastify({
   logger: false,
 });
 
+fastify.register(cors, { origin: ["http://localhost:5000", "https://example.com"] });
+fastify.register(fastifyHelmet, {
+  global: true,
+});
 fastify.register(fastifyCookie);
 
 // Register routes
