@@ -6,7 +6,6 @@ A RESTful API for storing and retrieving sales data, built with **Fastify**, **T
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Database Schema](#database-schema)
@@ -15,17 +14,6 @@ A RESTful API for storing and retrieving sales data, built with **Fastify**, **T
 - [Environment Variables](#environment-variables)
 - [Scripts](#scripts)
 - [Bonus Features](#bonus-features)
-
----
-
-## Overview
-
-This project was built as part of learning a backend framework. The goal is to learn **Fastify** quickly and apply that knowledge to build a production-ready REST API that supports:
-
-- Querying sales data by month
-- Tracking which customers purchased which products
-- Authentication via JWT
-- Input validation using Zod schemas
 
 ---
 
@@ -172,7 +160,7 @@ enum Category {
 #### Example: Query sales for a month
 
 ```
-GET /api/sales?month=2025-06
+GET /api/v1/sale?year=2026&month=3
 Authorization: Bearer <token>
 ```
 
