@@ -21,9 +21,5 @@ export default async function productRoutes(fastify: FastifyInstance) {
     { preHandler: [authMiddleware, actionAuth] },
     productController.deleteHandler.bind(productController),
   );
-  fastify.get(
-    "/:productId",
-    { preHandler: [authMiddleware, actionAuth] },
-    productController.getProductHandler.bind(productController),
-  );
+  fastify.get("/:productId", productController.getProductHandler.bind(productController));
 }
