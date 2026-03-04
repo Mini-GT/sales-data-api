@@ -11,7 +11,7 @@ import z from "zod";
 class ProductController {
   private async getValidProduct(id: string) {
     const product = await prisma.product.findUnique({
-      where: { id: Number(id) },
+      where: { productId: Number(id) },
     });
     return product;
   }
@@ -42,9 +42,9 @@ class ProductController {
         });
       }
 
-      const { id } = result.data.params;
+      const { productId } = result.data.params;
 
-      const product = await this.getValidProduct(id);
+      const product = await this.getValidProduct(productId);
 
       if (!product) {
         return reply.status(404).send({ message: "Product not found" });
@@ -104,14 +104,14 @@ class ProductController {
 
       const { params, body } = result.data;
 
-      const product = await this.getValidProduct(params.id);
+      const product = await this.getValidProduct(params.productId);
 
       if (!product) {
         return reply.status(404).send({ message: "Product not found" });
       }
 
       const updated = await prisma.product.update({
-        where: { id: Number(params.id) },
+        where: { productId: Number(params.productId) },
         data: body,
       });
 
@@ -122,23 +122,23 @@ class ProductController {
   }
 
   async deleteHandler(request: FastifyRequest, reply: FastifyReply) {
+    console.log(request.body);
     try {
       const result = await deleteProductSchema.safeParseAsync({ params: request.params });
-
       if (!result.success) {
         return reply.status(400).send({ message: "Invalid ID" });
       }
 
-      const { id } = result.data.params;
+      const { productId } = result.data.params;
 
-      const product = await this.getValidProduct(id);
+      const product = await this.getValidProduct(productId);
 
       if (!product) {
         return reply.status(404).send({ message: "Product not found" });
       }
 
       await prisma.product.delete({
-        where: { id: Number(id) },
+        where: { productId: Number(productId) },
       });
 
       return reply.status(200).send({ message: "Product deleted" });

@@ -36,7 +36,7 @@ class AuthController {
         return reply.status(401).send({ message: "Invalid email or password" });
       }
 
-      const token = signJwt({ id: user.id }, TOKEN_JWT_SECRET, { expiresIn: "7d" });
+      const token = signJwt({ id: user.customerId }, TOKEN_JWT_SECRET, { expiresIn: "7d" });
 
       reply.header("accessToken", token).status(200).send({ message: "Login successful" });
     } catch (error) {

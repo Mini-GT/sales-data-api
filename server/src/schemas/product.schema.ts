@@ -3,14 +3,17 @@ import { z } from "zod";
 export const ProductCategory = ["FOOD", "ELECTRONIC", "HOME_APPLIANCE"] as const;
 
 export const productIdParamSchema = z.object({
-  id: z.string().min(1, "ID is required in URL"),
+  productId: z
+    .string()
+    .min(1, "ID is required in URL")
+    .refine((val) => !isNaN(Number(val)), { message: "ID must be a number" }),
 });
 
 export const registerProductSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   price: z.number(),
   quantity: z.number(),
-  category: z.enum(ProductCategory),
+  category: z.string().toUpperCase().pipe(z.enum(ProductCategory)),
 });
 
 export const updateProductSchema = z.object({
