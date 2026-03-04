@@ -42,7 +42,15 @@ class AuthController {
 
       const token = signJwt({ id: user.customerId }, TOKEN_JWT_SECRET, { expiresIn: "7d" });
 
-      reply.header("accessToken", token).status(200).send({ message: "Login successful" });
+      reply
+        .setCookie("accessToken", token, {
+          httpOnly: true,
+          sameSite: "strict",
+          path: "/",
+          secure: process.env.NODE_ENV === "production",
+          maxAge: 7 * 24 * 60 * 60, // 7 days
+        })
+        .send({ message: "User logged in" });
     } catch (error) {
       return reply.status(500).send({ message: "Internal Server Error" });
     }
@@ -103,7 +111,7 @@ class AuthController {
    * Removes the access token
    */
   async logoutHandler(request: FastifyRequest, reply: FastifyReply) {
-    reply.removeHeader("accessToken").send({ message: "Logged out" });
+    reply.clearCookie("accessToken").send({ message: "Logged out" });
   }
 }
 
