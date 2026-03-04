@@ -4,7 +4,11 @@ import type { FastifyInstance } from "fastify";
 
 export default async function saleRoutes(fastify: FastifyInstance) {
   fastify.get("/", saleController.getMonthlySalesHandler.bind(saleController));
-  fastify.post("/", saleController.createSaleHandler.bind(saleController));
+  fastify.post(
+    "/",
+    { preHandler: authMiddleware },
+    saleController.createSaleHandler.bind(saleController),
+  );
 
   fastify.get(
     "/:saleId",
