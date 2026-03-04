@@ -142,22 +142,22 @@ enum Category {
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/auth/register` | Register a new user | ❌ |
-| POST | `/api/auth/login` | Login and receive JWT | ❌ |
+| POST | `/api/v1/auth/register` | Register a new user | ❌ |
+| POST | `/api/v1/auth/login` | Login and receive JWT | ❌ |
 
 ### Products
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| GET | `/api/products` | Get all products | ✅ |
-| POST | `/api/products` | Create a product | ✅ |
+| GET | `/api/v1/product` | Get all products | ✅ |
+| POST | `/api/v1/product` | Create a product | ✅ |
 
 ### Sales
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| GET | `/api/sales?month=YYYY-MM` | Get all sales for a month | ✅ |
-| POST | `/api/sales` | Record a new sale | ✅ |
+| GET | `/api/v1/sale?year=YYYY&month=MM` | Get all sales for a month | ✅ |
+| POST | `/api/v1/sales` | Record a new sale | ✅ |
 
 #### Example: Query sales for a month
 
@@ -179,8 +179,10 @@ Authorization: Bearer <token>
     },
     "product": {
       "id": "clx789...",
-      "name": "Widget Pro",
-      "price": 49.99
+      "name": "Apple Watch",
+      "price": 49.99,
+      "quantity": 50,
+      "category": "ELECTRONICS"'
     }
   }
 ]
