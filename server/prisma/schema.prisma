@@ -7,6 +7,39 @@ datasource db {
   provider = "postgresql"
 }
 
+model Customer {
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  email      String   @unique
+  name       String
+  role       Role     @default(USER)
+  password   String
+  customerId Int      @id @default(autoincrement())
+  sales      Sale[]
+}
+
+model Product {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  name      String
+  price     Int
+  quantity  Int      @default(1)
+  category  Category
+  productId Int      @id @default(autoincrement())
+  sales     Sale[]
+}
+
+model Sale {
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  customerId Int
+  productId  Int
+  quantity   Int      @default(1)
+  saleId     Int      @id @default(autoincrement())
+  customer   Customer @relation(fields: [customerId], references: [customerId], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [productId], onDelete: Cascade)
+}
+
 enum Role {
   USER
   ADMIN
@@ -18,44 +51,4 @@ enum Category {
   FOOD
   ELECTRONIC
   HOME_APPLIANCE
-}
-
-model Customer {
-  customerId        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  email    String @unique
-  name     String
-  role     Role   @default(USER)
-  password String
-
-  sales Sale[]
-}
-
-model Product {
-  productId        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  name      String
-  price     Int
-  quantity  Int @default(1)
-  category  Category
-
-  sales Sale[]
-}
-
-model Sale {
-  saleId        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  customerId Int
-  productId  Int
-
-  quantity Int @default(1)
-
-  customer Customer @relation(fields: [customerId], references: [customerId], onDelete: Cascade)
-  product  Product  @relation(fields: [productId], references: [productId], onDelete: Cascade)
 }
