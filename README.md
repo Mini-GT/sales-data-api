@@ -182,7 +182,7 @@ Authorization: Bearer <token>
       "name": "Apple Watch",
       "price": 49.99,
       "quantity": 50,
-      "category": "ELECTRONICS"'
+      "category": "ELECTRONIC"
     }
   }
 ]
